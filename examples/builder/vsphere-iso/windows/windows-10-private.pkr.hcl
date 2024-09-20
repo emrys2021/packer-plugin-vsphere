@@ -55,6 +55,9 @@ source "vsphere-iso" "example_windows" {
   ip_wait_address = "0.0.0.0/0"  # 表示等待任何 IPv4 地址
   winrm_timeout = "30m"
   shutdown_timeout = "600m" # please shutdown virtual machine within... 设置等待关机超时时间
+
+  convert_to_template = true
+  folder = "/Templates/Windows"  # 理论上是指定虚拟机的保存目录，虚拟机转换成虚拟机模板后和虚拟机一个目录，所以也可以理解为虚拟机模板的保存目录，此目录是相对于datacenter根目录的相对路径
 }
 
 # a build block invokes sources and runs provisioning steps on them. The
