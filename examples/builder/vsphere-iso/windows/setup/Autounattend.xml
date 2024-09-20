@@ -7,7 +7,14 @@
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
     <settings pass="windowsPE">
         <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <UILanguage>en-US</UILanguage>
+            <SetupUILanguage>
+                <UILanguage>zh-CN</UILanguage>
+            </SetupUILanguage>
+            <InputLocale>zh-CN</InputLocale>
+            <SystemLocale>zh-CN</SystemLocale>
+            <UILanguage>zh-CN</UILanguage>
+            <UserLocale>zh-CN</UserLocale>
+            <UILanguageFallback>en-US</UILanguageFallback>
         </component>
 
         <component name="Microsoft-Windows-PnpCustomizationsWinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -28,6 +35,10 @@
                     <Key>XXXXX-XXXXX-XXXXX-XXXXX-XXXXX</Key>
                 </ProductKey>
                 -->
+                <ProductKey>
+                    <Key>VK7JG-NPHTM-C97JM-9MPGT-3V66T</Key>
+                </ProductKey>
+               
             </UserData>
 
             <ImageInstall>
@@ -119,8 +130,18 @@
                     <Order>1</Order>
                     <!-- Enable WinRM service -->
                     <CommandLine>powershell -ExecutionPolicy Bypass -File a:\setup.ps1</CommandLine>
-                    <RequiresUserInput>true</RequiresUserInput>
+                    <!-- <RequiresUserInput>true</RequiresUserInput> -->
+                    <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
+                <!-- winrm服务启用后，等待600s使packer有足够的时间等待winrm服务就绪，并使用winrm执行provisioner脚本 -->
+                <!-- provisioner脚本执行完后，执行shutdown命令，因为packer会等待虚拟机关机 -->
+                <!-- 后续测试不需要执行shutdown命令也会关机，应该是packer构建成功后会自动发送shutdown命令，此处的方法可以作为一个备选 -->
+                <!-- packer有一个disable_shutdown选项，可以使packer不发送shutdown命令，但是packer构建仍然会等待虚拟机关机，导致构建失败，参考2020年的讨论：https://github.com/hashicorp/packer/issues/9362 -->
+                <!-- <SynchronousCommand wcm:action="add"> -->
+                    <!-- <Order>2</Order> -->
+                    <!-- <CommandLine>shutdown /s /f /t 600</CommandLine> -->
+                    <!-- <RequiresUserInput>false</RequiresUserInput> -->
+                <!-- </SynchronousCommand> -->
             </FirstLogonCommands>
         </component>
     </settings>

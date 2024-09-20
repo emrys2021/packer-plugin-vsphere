@@ -1,0 +1,1 @@
+shell到当前目录，执行packer build --var-file=packer-config.json ./windows-10.pkr.hcl
